@@ -1,0 +1,5 @@
+# synthetic fixture — Windows version output (Win11 23H2)
+WindowsProductName    : Windows 11 Pro
+WindowsVersion        : 2009
+OsBuildNumber         : 22631
+OsArchitecture        : 64-bit

@@ -1,0 +1,10 @@
+# synthetic fixture — directory listing showing ransomware signs (note + mass renamed files)
+    Directory: C:\Users\user\Documents
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          11/18/2026   8:02 AM           4213 budget-2026.xlsx.locked
+-a----          11/18/2026   8:02 AM          18211 family-photo.jpg.locked
+-a----          11/18/2026   8:02 AM           9214 resume.docx.locked
+-a----          11/18/2026   8:02 AM         114211 tax-return-2025.pdf.locked
+-a----          11/18/2026   8:03 AM           1893 READ_ME_TO_RECOVER.txt

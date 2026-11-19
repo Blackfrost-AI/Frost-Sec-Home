@@ -1,0 +1,2 @@
+# synthetic fixture — clamscan not installed (command not found)
+bash: clamscan: command not found

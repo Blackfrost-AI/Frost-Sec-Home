@@ -1,0 +1,2 @@
+# synthetic fixture — ipconfig getifaddr en0 (home /24)
+192.168.1.23

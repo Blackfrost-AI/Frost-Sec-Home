@@ -1,0 +1,4 @@
+# synthetic fixture — manual freshclam fails because the daemon holds the lock (HEALTHY on Debian/Ubuntu)
+ERROR: /var/log/clamav/freshclam.log is locked by another process
+ERROR: Problem with internal logger (UpdateLogFile = /var/log/clamav/freshclam.log).
+ERROR: Can't open /var/log/clamav/freshclam.log in append mode (check permissions!).

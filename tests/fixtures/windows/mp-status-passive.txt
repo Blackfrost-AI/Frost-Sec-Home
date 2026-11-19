@@ -1,0 +1,7 @@
+# synthetic fixture — Defender off because third-party AV is in passive mode (NORMAL)
+AntivirusEnabled              : False
+RealTimeProtectionEnabled     : False
+AMServiceEnabled              : True
+AntivirusSignatureLastUpdated : 11/10/2026 5:02:11 AM
+QuickScanAge                  : 9
+FullScanAge                   : 30

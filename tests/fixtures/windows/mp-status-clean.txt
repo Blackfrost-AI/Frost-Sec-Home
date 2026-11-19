@@ -1,0 +1,7 @@
+# synthetic fixture — Get-MpComputerStatus, healthy Defender
+AntivirusEnabled              : True
+RealTimeProtectionEnabled     : True
+AMServiceEnabled              : True
+AntivirusSignatureLastUpdated : 11/17/2026 6:12:04 AM
+QuickScanAge                  : 1
+FullScanAge                   : 6

@@ -1,0 +1,4 @@
+# synthetic fixture — macOS version (Sequoia 15.1, arm64)
+ProductName:		macOS
+ProductVersion:		15.1
+BuildVersion:		24B83

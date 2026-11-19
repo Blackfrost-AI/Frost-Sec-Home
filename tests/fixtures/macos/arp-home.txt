@@ -1,0 +1,5 @@
+# synthetic fixture — arp table for a small home network (passive device inventory)
+? (192.168.1.1) at a4:2b:b0:11:22:33 on en0 ifscope [ethernet]
+? (192.168.1.14) at 3c:22:fb:44:55:66 on en0 ifscope [ethernet]
+? (192.168.1.27) at b8:27:eb:77:88:99 on en0 ifscope [ethernet]
+? (192.168.1.255) at ff:ff:ff:ff:ff:ff on en0 ifscope [ethernet]

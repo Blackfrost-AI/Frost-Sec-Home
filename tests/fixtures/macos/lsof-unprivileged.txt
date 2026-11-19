@@ -1,0 +1,3 @@
+# synthetic fixture — unprivileged lsof: only the user's own listeners visible (limited view)
+node      4821 user   23u  IPv4 0x9a2b      0t0  TCP 127.0.0.1:3000 (LISTEN)
+python3   5110 user    4u  IPv4 0x9c11      0t0  TCP 127.0.0.1:8000 (LISTEN)

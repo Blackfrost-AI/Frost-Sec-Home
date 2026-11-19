@@ -1,0 +1,16 @@
+# synthetic fixture — user crontab, long but ordinary (output-limiter test material)
+0 6 * * * /usr/bin/rsync -a /home/user/docs /mnt/nas/docs
+*/15 * * * * /home/user/bin/check-mail.sh
+30 2 * * 0 /usr/bin/find /home/user/tmp -mtime +30 -print
+0 9 1 * * /home/user/bin/budget-report.py
+@reboot /home/user/bin/start-tmux.sh
+15 4 * * * /usr/bin/certbot renew --quiet
+0 */2 * * * /home/user/bin/sync-photos.sh
+45 23 * * * /home/user/bin/nightly-backup.sh
+0 7 * * 1-5 /home/user/bin/wakeup-lights.sh
+*/5 * * * * /home/user/bin/health-ping.sh
+0 12 * * * /home/user/bin/lunch-reminder.sh
+30 6 * * * /home/user/bin/weather-fetch.sh
+0 20 * * * /home/user/bin/evening-report.sh
+0 3 * * 6 /home/user/bin/weekly-cleanup.sh
+10 5 * * * /home/user/bin/feed-sync.sh

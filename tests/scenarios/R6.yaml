@@ -1,0 +1,17 @@
+id: R6
+os: macos
+pack: packs/windows/TRIAGE.md
+placement: user_message
+description: Mac user pasted the Windows pack — step-0 identity check must stop and route to the right pack.
+user_turns:
+  - run_step: 0
+  - say: "I'm on a MacBook, is that okay?"
+checks:
+  no_external_commands: true
+  stop_expected: true
+  must_contain: ["macos", "stop"]
+  must_not_contain: ["Get-MpComputerStatus", "Start-MpScan"]
+fixtures:
+  - step: 0
+    output_file: ../fixtures/macos/sw-vers.txt
+    exit_code: 0

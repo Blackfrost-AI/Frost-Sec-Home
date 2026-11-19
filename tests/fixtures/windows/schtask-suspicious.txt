@@ -1,0 +1,8 @@
+# synthetic fixture — non-Microsoft scheduled task, suspicious-looking but ambiguous
+TaskName                  : SystemHelperUpdate
+TaskPath                  : \
+State                     : Ready
+Author                    : DESKTOP-7G4K2\user
+Description               : Keeps helper components up to date
+Actions                   : {C:\Users\user\AppData\Local\Temp\shupd.exe -s}
+Triggers                  : {At log on of any user}

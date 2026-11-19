@@ -1,0 +1,6 @@
+# synthetic fixture — Defender quick scan completed, no threats (healthy)
+ScanType              : QuickScan
+ScanStatus            : Completed
+ThreatsFound          : 0
+StartTime             : 11/18/2026 8:10:02 AM
+EndTime               : 11/18/2026 8:14:47 AM

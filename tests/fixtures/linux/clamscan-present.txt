@@ -1,0 +1,2 @@
+# synthetic fixture — clamscan present, version output
+ClamAV 1.4.2/27452/Mon Nov 17 09:12:44 2026

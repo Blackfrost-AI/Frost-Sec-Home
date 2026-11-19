@@ -1,0 +1,5 @@
+# synthetic fixture — ip addr showing a /22 (dorm/large LAN: active sweep must be refused, >256 addresses)
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
+    inet 10.20.4.17/22 brd 10.20.7.255 scope global dynamic eth0
+       valid_lft 86312sec preferred_lft 86312sec

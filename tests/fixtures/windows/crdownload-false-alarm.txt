@@ -1,0 +1,6 @@
+# synthetic fixture — single odd extension, NOT ransomware (a partial browser download)
+    Directory: C:\Users\user\Downloads
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          11/18/2026   7:58 AM        4812233 installer-setup.exe.crdownload
