@@ -83,6 +83,28 @@ verification_status: untested      # enum: untested | partial | verified
 - (human) Every card's NEVER CONCLUDE line must name a real overclaim a small
   model would make; generic filler is rejected in review.
 
+## Machine-readable pack format (lint contract)
+
+- **Steps** are headers: `## Step N — title` (N integer, unique, ascending not
+  required but jumps must resolve).
+- **Commands**: a step contains at most one fenced block whose info string is
+  `command` (```command). Its content is exactly one line (pipes allowed).
+  Other fences (e.g. ```text report skeletons) are not commands.
+- **Cards** are fenced blocks with info string `card`, placed inside the step
+  they belong to. First line `CARD <id>`, then `FIELD: value` lines. Required
+  fields: COMMAND, TIER, NORMAL LOOKS LIKE, SUSPICIOUS LOOKS LIKE, CANNOT TELL
+  WHEN, EXIT CODES / EXPECTED WARNINGS, NEXT IF SUSPICIOUS, NEVER CONCLUDE.
+  The card's COMMAND value must byte-match the step's ```command content.
+- **Jumps**: the exact phrase `go to step N` must reference an existing step.
+- **Output limiters (S11)**: a card may declare `UNBOUNDED: yes`; then its
+  command must contain `Select-Object -First`, `head -n`, or `grep`, and the
+  step prose must contain `paste only the first`.
+- **Self-check**: a section `## Self-check` with exactly 3 numbered questions
+  before Step 1's content begins (after Step 0).
+- **Handoff**: the pack must contain `HANDOFF` and `NEW chat` near the end.
+- **Banner**: `verification_status` != `verified` requires a blockquote line
+  starting `> **UNTESTED:**` or `> **PARTIALLY VERIFIED:**`.
+
 ## Verification
 
 Every pinned command needs a row in `docs/VERIFICATION.md` (OS version, date,
