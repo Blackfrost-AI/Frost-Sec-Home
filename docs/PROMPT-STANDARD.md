@@ -95,6 +95,10 @@ verification_status: untested      # enum: untested | partial | verified
   fields: COMMAND, TIER, NORMAL LOOKS LIKE, SUSPICIOUS LOOKS LIKE, CANNOT TELL
   WHEN, EXIT CODES / EXPECTED WARNINGS, NEXT IF SUSPICIOUS, NEVER CONCLUDE.
   The card's COMMAND value must byte-match the step's ```command content.
+- **Guided-GUI steps** (no command, exact click path instead) carry a card
+  whose COMMAND line starts `GUI:` followed by the click path. They have no
+  ```command fence. T1 GUI steps still require the full approval, with the
+  click path shown as the COMMAND.
 - **Jumps**: the exact phrase `go to step N` must reference an existing step.
 - **Output limiters (S11)**: a card may declare `UNBOUNDED: yes`; then its
   command must contain `Select-Object -First`, `head -n`, or `grep`, and the

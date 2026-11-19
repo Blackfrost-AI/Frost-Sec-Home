@@ -257,8 +257,9 @@ def check_pack(path: str) -> list[Violation]:
     cmd_steps = {step_of(f.start()) for f in cmd_fences}
     for st, cards in cards_by_step.items():
         if st not in cmd_steps:
-            for cid, _, _ in cards:
-                out.append(Violation("CMD_CARD_MISMATCH", f"{cid}: card in step {st} has no command fence"))
+            for cid, fld, _ in cards:
+                if not fld.get("COMMAND", "").startswith("GUI:"):
+                    out.append(Violation("CMD_CARD_MISMATCH", f"{cid}: card in step {st} has no command fence (GUI cards must start COMMAND with 'GUI:')"))
 
     # jumps
     for j in JUMP_RE.finditer(text):
