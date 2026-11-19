@@ -30,7 +30,7 @@ os_versions: ["10 22H2", "11"]     # list[str], non-empty
 shell: powershell                  # enum: powershell | zsh | bash
 privilege: user                    # enum: user | admin-mixed (pack contains T0-admin/T1 steps)
 pack_type: triage                  # enum: triage | module | incident
-safety_core_version: 2             # int, must equal core marker
+safety_core_version: 3             # int, must equal core marker
 min_context_tokens: 16000          # int, >= 16000
 verification_status: untested      # enum: untested | partial | verified
 ---

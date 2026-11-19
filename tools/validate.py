@@ -78,7 +78,7 @@ OS_MARKERS = {
     ],
 }
 
-SLOT_RE = re.compile(r"<(PID|PATH|SUBNET):([^>]*)>")
+SLOT_RE = re.compile(r"<(PID|PATH|NAME|SUBNET):([^>]*)>")
 STEP_RE = re.compile(r"^## Step (\d+)\b", re.M)
 JUMP_RE = re.compile(r"go to step (\d+)")
 FENCE_RE = re.compile(r"^```(\w*)\n(.*?)^```", re.M | re.S)

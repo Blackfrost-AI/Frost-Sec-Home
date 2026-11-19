@@ -23,7 +23,7 @@ os_versions: ["11"]
 shell: powershell
 privilege: user
 pack_type: module
-safety_core_version: 2
+safety_core_version: 3
 min_context_tokens: 16000
 verification_status: verified
 ---
