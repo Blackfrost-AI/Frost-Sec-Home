@@ -74,9 +74,12 @@ OS_MARKERS = {
         r"\bapt(-get)?\s", r"\bdnf\s", r"\bpacman\s", r"\bufw\s",
         r"\bsystemctl\b", r"\bclamscan\b", r"\bfreshclam\b", r"\bss\s+-",
         r"\bdpkg\b", r"\brpm\s+-V", r"\bchmod\b", r"\bchown\b",
-        r"\bcrontab\b", r"\bip\s+(addr|neigh)\b",
+        r"\bip\s+(addr|neigh)\b",
     ],
 }
+
+# commands that legitimately exist on more than one OS (not bleed)
+SHARED_COMMANDS = {"macos": {r"\bcrontab\b"}}
 
 SLOT_RE = re.compile(r"<(PID|PATH|NAME|SUBNET):([^>]*)>")
 STEP_RE = re.compile(r"^## Step (\d+)\b", re.M)
@@ -226,6 +229,8 @@ def check_pack(path: str) -> list[Violation]:
             if other == os_name:
                 continue
             for pat in markers:
+                if pat in SHARED_COMMANDS.get(os_name, set()):
+                    continue
                 if re.search(pat, cmd):
                     out.append(Violation("OS_BLEED", f"step {st}: {other} marker in {os_name} pack: {cmd[:60]}"))
                     break
