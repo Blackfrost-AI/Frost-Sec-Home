@@ -1,0 +1,74 @@
+# macOS look-only command receipts
+# SCOPE: syntax/behavior verification of LOOK-ONLY commands on this host only.
+# Host is macOS 27.2 — NEWER than pack targets (13-15). Output wording on
+# 13-15 may differ; packs keep UNTESTED banners until tested on target versions.
+# No T1 changes were executed. No model behavior was tested.
+date_utc: 2026-11-19T06:24:42Z
+host: Craigs-Mac-mini.local
+sw_vers:
+ProductName:		macOS
+ProductVersion:		27.2
+BuildVersion:		26B123
+
+## fdesetup status
+FileVault is On.
+exit=0
+
+## spctl --status
+assessments enabled
+exit=0
+
+## socketfilterfw --getglobalstate
+Firewall is disabled. (State = 0)
+exit=0
+
+## ipconfig getifaddr en0
+10.0.0.9
+exit=0
+
+## crontab -l
+# Trading Agents - 7 Day Challenge
+SHELL=/bin/bash
+PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin
+
+# Crystal Morning Brief - 6:00 AM PST (14:00 UTC)
+
+# Terrell Morning Brief - 6:15 AM PST (14:15 UTC)  
+
+# Market Watcher - every 30 min during market hours
+
+# EOD Report - 8:45 PM PST (04:45 UTC)
+# Crystal Morning Brief - 6:00 AM PST daily
+# Terrell Morning Brief - 6:15 AM PST daily
+# one-time craig-main restart @ 21:00 2026-06-15 (self-removing)
+45 4 * * * "/Users/craigmac/.acme.sh"/acme.sh --cron --home "/Users/craigmac/.acme.sh" > /dev/null
+exit=0
+
+## spctl -a -vv /Applications/Safari.app
+/Applications/Safari.app: accepted
+source=Apple System
+origin=macOS Software Signing
+exit=0
+
+## lsof -nP -iTCP -sTCP:LISTEN (unprivileged, first 6 lines)
+COMMAND     PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ControlCe   791 craigmac   10u  IPv4 0x4817807072f23a26      0t0  TCP *:7000 (LISTEN)
+ControlCe   791 craigmac   11u  IPv6 0x6bbc5738b9abb595      0t0  TCP *:7000 (LISTEN)
+ControlCe   791 craigmac   12u  IPv4 0x9c2ea1960db96c49      0t0  TCP *:5000 (LISTEN)
+ControlCe   791 craigmac   13u  IPv6 0x25cedad0afbacfbf      0t0  TCP *:5000 (LISTEN)
+rapportd    799 craigmac   11u  IPv4 0x6c5aa3bb5404cf02      0t0  TCP *:49170 (LISTEN)
+
+## arp -a -n (first 6 lines)
+
+## ps aux -r (first 5 lines)
+USER               PID  %CPU %MEM      VSZ    RSS   TT  STAT STARTED      TIME COMMAND
+root             73095  92.6  0.3 488882464  54576   ??  Rs   10:22PM   1:08.99 /System/Library/PrivateFrameworks/AppleNeuralEngine.framework/XPCServices/ANECompilerService.xpc/Contents/MacOS/ANECompilerService
+root              9224  53.0  0.2 488932272  29120   ??  Ss   Tue10AM  11:02.43 /usr/libexec/syspolicyd
+root               399  47.4  0.3 489031408  42704   ??  Us   Sat10AM  54:51.04 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds
+_windowserver      443  32.9  0.7 492589632 117824   ??  Ss   Sat10AM 1307:32.55 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer -daemon
+
+## negative evidence
+- sfltool dumpbtm: HUNG (>60s, killed) — EXCLUDED from packs
+- sqlite3 user TCC.db: 'unable to open database file' without Full Disk Access — GUI path used instead
+- netstat -an -p tcp | grep LISTEN: empty on this host — lsof used instead
+- defaults read com.apple.alf globalstate: 'does not exist' despite firewall state — socketfilterfw used instead
