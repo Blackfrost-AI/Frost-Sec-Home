@@ -1,0 +1,337 @@
+# Linux look-only command receipts (container syntax/behavior verification)
+# SCOPE: ubuntu:22.04 and ubuntu:24.04 containers on darwin/arm64 host.
+# NOT real Linux desktops: no systemd PID1, no GUI autostart, no real
+# network neighbors. Packs keep UNTESTED banners until verified on real
+# Ubuntu/Fedora/Arch desktops. Look-only commands + labeled container-only
+# installs; no model behavior tested. dnf/pacman branches UNTESTED (no
+# Fedora/Arch images available locally).
+date_utc: 2026-11-19T06:43:35Z
+host: Craigs-Mac-mini.local
+engine: Docker version 29.9.3, build 5457199
+
+############ ubuntu:22.04 ############
+# container identity
+PRETTY_NAME="Ubuntu 22.04.5 LTS"
+NAME="Ubuntu"
+kernel: 7.0.14-linuxkit
+
+=== BASE IMAGE (tools may be absent — absence receipts) ===
+## ip addr
+/receipts.sh: 15: ip: not found
+exit=127
+
+## ip neigh
+/receipts.sh: 15: ip: not found
+exit=127
+
+## ss -tulpn
+/receipts.sh: 15: ss: not found
+exit=127
+
+## crontab -l
+/receipts.sh: 15: crontab: not found
+exit=127
+
+## ufw status
+/receipts.sh: 15: ufw: not found
+exit=127
+
+## clamscan --version
+/receipts.sh: 15: clamscan: not found
+exit=127
+
+## hostname -I
+172.17.0.2 
+exit=0
+
+## cat /etc/hosts
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::	ip6-localnet
+ff00::	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+172.17.0.2	bc6e9bef5fda
+exit=0
+
+## tail -5 /root/.bashrc
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+#if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+#    . /etc/bash_completion
+#fi
+exit=0
+
+## ls -la /root/.config/autostart
+ls: cannot access '/root/.config/autostart': No such file or directory
+exit=2
+
+## systemctl list-unit-files --state=enabled
+/receipts.sh: 15: systemctl: not found
+exit=127
+
+## apt-get -s upgrade
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+exit=0
+
+=== INSTALL tooling for syntax verification (labeled change, container-only) ===
+install exit=0
+
+=== WITH TOOLS INSTALLED ===
+## ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+3: gre0@NONE: <NOARP> mtu 1476 qdisc noop state DOWN group default qlen 1000
+    link/gre 0.0.0.0 brd 0.0.0.0
+4: gretap0@NONE: <BROADCAST,MULTICAST> mtu 1462 qdisc noop state DOWN group default qlen 1000
+    link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff
+exit=0
+
+## ip neigh
+172.17.0.1 dev eth0 lladdr 4a:22:57:a9:54:5c REACHABLE
+exit=0
+
+## ss -tulpn
+Netid State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+exit=0
+
+## crontab -l
+no crontab for root
+exit=1
+
+## ufw status
+ERROR: problem running iptables: iptables v1.8.7 (nf_tables): Could not fetch rule set generation id: Permission denied (you must be root)
+exit=1
+
+## clamscan --version
+ClamAV 1.5.4
+exit=0
+
+## systemctl list-unit-files --state=enabled
+/receipts.sh: 15: systemctl: not found
+exit=127
+
+## apt-get -s upgrade
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following packages will be upgraded:
+  apt libapt-pkg6.0 libc-bin libc6 libpcre2-8-0 perl-base
+6 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Inst perl-base [5.34.0-3ubuntu1.9] (5.34.0-3ubuntu1.10 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [arm64])
+Conf perl-base (5.34.0-3ubuntu1.10 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [arm64])
+Inst libc6 [2.35-0ubuntu3.15] (2.35-0ubuntu3.18 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [arm64])
+Conf libc6 (2.35-0ubuntu3.18 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [arm64])
+Inst libc-bin [2.35-0ubuntu3.15] (2.35-0ubuntu3.18 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [arm64])
+exit=0
+
+=== freshclam signature update (container-only, labeled network download) ===
+Thu Nov 19 06:44:20 2026 -> main.cvd updated (version: 63, sigs: 3287027, f-level: 90, builder: tomjudge)
+Thu Nov 19 06:44:20 2026 -> bytecode database available for download (remote version: 339)
+Testing database: '/var/lib/clamav/tmp.65dc755513/bytecode.cvd' ...
+Database test passed.
+Thu Nov 19 06:44:20 2026 -> bytecode.cvd updated (version: 339, sigs: 80, f-level: 90, builder: nrandolp)
+ERROR: NotifyClamd: Can't find or parse configuration file /etc/clamav/clamd.conf
+freshclam exit=0
+
+=== clamscan exit-code behavior on synthetic files ===
+Scanned directories: 0
+Scanned files: 1
+Infected files: 0
+clean-file exit=0
+/root/scan-demo/eicar.txt: Eicar-Test-Signature FOUND
+Infected files: 1
+eicar-file exit=1
+(demo folder removed; container is disposable)
+
+############ ubuntu:24.04 ############
+# container identity
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+kernel: 7.0.14-linuxkit
+
+=== BASE IMAGE (tools may be absent — absence receipts) ===
+## ip addr
+/receipts.sh: 15: ip: not found
+exit=127
+
+## ip neigh
+/receipts.sh: 15: ip: not found
+exit=127
+
+## ss -tulpn
+/receipts.sh: 15: ss: not found
+exit=127
+
+## crontab -l
+/receipts.sh: 15: crontab: not found
+exit=127
+
+## ufw status
+/receipts.sh: 15: ufw: not found
+exit=127
+
+## clamscan --version
+/receipts.sh: 15: clamscan: not found
+exit=127
+
+## hostname -I
+172.17.0.2 
+exit=0
+
+## cat /etc/hosts
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::	ip6-localnet
+ff00::	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+172.17.0.2	cf7e7ae6809b
+exit=0
+
+## tail -5 /root/.bashrc
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+#if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+#    . /etc/bash_completion
+#fi
+exit=0
+
+## ls -la /root/.config/autostart
+ls: cannot access '/root/.config/autostart': No such file or directory
+exit=2
+
+## systemctl list-unit-files --state=enabled
+/receipts.sh: 15: systemctl: not found
+exit=127
+
+## apt-get -s upgrade
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+exit=0
+
+=== INSTALL tooling for syntax verification (labeled change, container-only) ===
+install exit=0
+
+=== WITH TOOLS INSTALLED ===
+## ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+3: gre0@NONE: <NOARP> mtu 1476 qdisc noop state DOWN group default qlen 1000
+    link/gre 0.0.0.0 brd 0.0.0.0
+4: gretap0@NONE: <BROADCAST,MULTICAST> mtu 1462 qdisc noop state DOWN group default qlen 1000
+    link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff
+exit=0
+
+## ip neigh
+172.17.0.1 dev eth0 lladdr 4a:22:57:a9:54:5c REACHABLE 
+exit=0
+
+## ss -tulpn
+Netid State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+exit=0
+
+## crontab -l
+no crontab for root
+exit=1
+
+## ufw status
+ERROR: problem running iptables: iptables v1.8.10 (nf_tables): Could not fetch rule set generation id: Permission denied (you must be root)
+exit=1
+
+## clamscan --version
+ClamAV 1.5.4
+exit=0
+
+## systemctl list-unit-files --state=enabled
+UNIT FILE                   STATE   PRESET
+cron.service                enabled enabled
+e2scrub_reap.service        enabled enabled
+getty@.service              enabled enabled
+networkd-dispatcher.service enabled enabled
+systemd-pstore.service      enabled enabled
+systemd-resolved.service    enabled enabled
+systemd-timesyncd.service   enabled enabled
+ufw.service                 enabled enabled
+remote-fs.target            enabled enabled
+apt-daily-upgrade.timer     enabled enabled
+apt-daily.timer             enabled enabled
+exit=0
+
+## apt-get -s upgrade
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following packages will be upgraded:
+  apt libapt-pkg6.0t64 libc-bin libc6 liblzma5 libpcre2-8-0 perl-base zlib1g
+8 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Inst perl-base [5.38.2-3.2ubuntu0.6] (5.38.2-3.2ubuntu0.7 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [arm64])
+Conf perl-base (5.38.2-3.2ubuntu0.7 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [arm64])
+Inst libc6 [2.39-0ubuntu8.9] (2.39-0ubuntu8.12 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [arm64])
+Conf libc6 (2.39-0ubuntu8.12 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [arm64])
+Inst libc-bin [2.39-0ubuntu8.9] (2.39-0ubuntu8.12 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [arm64])
+exit=0
+
+=== freshclam signature update (container-only, labeled network download) ===
+Thu Nov 19 06:45:20 2026 -> main.cvd updated (version: 63, sigs: 3287027, f-level: 90, builder: tomjudge)
+Thu Nov 19 06:45:20 2026 -> bytecode database available for download (remote version: 339)
+Testing database: '/var/lib/clamav/tmp.8e5fc1c2f2/bytecode.cvd' ...
+Database test passed.
+Thu Nov 19 06:45:20 2026 -> bytecode.cvd updated (version: 339, sigs: 80, f-level: 90, builder: nrandolp)
+ERROR: NotifyClamd: Can't find or parse configuration file /etc/clamav/clamd.conf
+freshclam exit=0
+
+=== clamscan exit-code behavior on synthetic files ===
+Scanned directories: 0
+Scanned files: 1
+Infected files: 0
+clean-file exit=0
+/root/scan-demo/eicar.txt: Eicar-Test-Signature FOUND
+Infected files: 1
+eicar-file exit=1
+(demo folder removed; container is disposable)
+
+############ NEGATIVE EVIDENCE / LIMITATIONS ############
+- Base ubuntu images ship WITHOUT ip/ss/crontab/ufw/clamscan/systemctl:
+  exit 127 "not found" receipts above are the honest CANNOT TELL inputs the
+  cards describe ("command not found" never means "clean").
+- After install: crontab -l exits 1 with "no crontab for root" — matches
+  card L-PER-05 EXPECTED exit-1 claim. VERIFIED.
+- clamscan clean file: "Infected files: 0", exit 0. EICAR test file:
+  "Eicar-Test-Signature FOUND", "Infected files: 1", exit 1 — matches card
+  L-MAL-04 exit-code claims. VERIFIED on both 22.04 and 24.04.
+- freshclam: signature DB download succeeded (exit 0); trailing
+  "ERROR: NotifyClamd" is a daemon-notify warning, not an update failure.
+- ufw status inside container: iptables/netfilter "Permission denied"
+  exit 1 — matches card L-HAR-02 CANNOT TELL branch (containers). Real
+  desktop behavior UNTESTED.
+- systemctl: absent in these containers (no systemd PID1) — service steps
+  UNTESTED; cards say CANNOT TELL / skip when systemd absent.
+- ip neigh: empty/near-empty in container networking — real neighbor-table
+  behavior UNTESTED.
+- dnf (Fedora) and pacman (Arch) branches: UNTESTED — no images available
+  locally; syntax reviewed by eye only.
+- GUI steps (router admin, backup tool, screen lock): UNTESTED, user-hands.
+- T1 change commands (ufw enable, quarantine mv, disable) NOT executed on
+  any real system; syntax-only review. No model behavior tested.
