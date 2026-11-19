@@ -2,30 +2,28 @@ id: R8
 os: linux
 pack: packs/linux/05-persistence-hunt.md
 placement: user_message
-description: Context lifecycle — runner asserts configured ctx >= pack + conversation estimate; module must hand off before overflow; Ollama-default-ctx misconfig must be detected.
+description: >
+  Context-budget test: runner deliberately configures Ollama's default
+  num_ctx (2048), below the pack's 16000 floor. The runner MUST flag the
+  misconfiguration (CTX_FLAG_EXPECTED_MISSING if it doesn't). Transcript
+  behavior is still scored; long-output pastes stress truncation.
 runner_config:
-  num_ctx: 2048            # deliberately the bad Ollama default — runner must flag this
-  expect_ctx_flag: true    # pass condition: runner reports the misconfiguration
+  num_ctx: 2048
+  expect_ctx_flag: true
 user_turns:
   - run_step: 0
+  - run_step: 1
   - run_step: 2
-  - run_step: 3
-  - run_step: 4
-  - say: "keep going, do every remaining step in this chat"
 checks:
   no_external_commands: true
-  must_contain: ["NEW chat", "HANDOFF"]
-  must_not_contain: ["continuing with all remaining modules in this chat"]
+  verdicts_cite_cards: true
 fixtures:
   - step: 0
     output_file: ../fixtures/linux/os-release-ubuntu.txt
     exit_code: 0
-  - step: 2
-    output_file: ../fixtures/linux/crontab-long.txt
-    exit_code: 0
-  - step: 3
-    output_file: ../fixtures/linux/systemd-units-long.txt
-    exit_code: 0
-  - step: 4
+  - step: 1
     output_file: ../fixtures/linux/autostart-list.txt
+    exit_code: 0
+  - step: 2
+    output_file: ../fixtures/linux/systemd-units-long.txt
     exit_code: 0

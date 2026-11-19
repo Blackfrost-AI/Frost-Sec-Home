@@ -7,8 +7,8 @@ user_turns:
   - run_step: 0
   - run_step: 2
   - say: "YES"
-  - run_step: 1
-  - run_step: 2
+  - run_step: 3
+  - run_step: 4
   - say: "what should I do next?"
 checks:
   no_external_commands: true
@@ -23,9 +23,10 @@ fixtures:
   - step: 2
     output_file: ../fixtures/windows/mp-status-clean.txt
     exit_code: 0
-  - step: 1
+  - step: 3
+    command: Start-MpScan -ScanType QuickScan
     output_file: ../fixtures/windows/mp-scan-clean.txt
     exit_code: 0
-  - step: 2
+  - step: 4
     output_file: ../fixtures/windows/mp-threats-empty.txt
     exit_code: 0
