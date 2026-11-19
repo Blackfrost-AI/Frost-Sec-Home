@@ -72,3 +72,54 @@ _windowserver      443  32.9  0.7 492589632 117824   ??  Ss   Sat10AM 1307:32.55
 - sqlite3 user TCC.db: 'unable to open database file' without Full Disk Access — GUI path used instead
 - netstat -an -p tcp | grep LISTEN: empty on this host — lsof used instead
 - defaults read com.apple.alf globalstate: 'does not exist' despite firewall state — socketfilterfw used instead
+
+## supplementary look-only receipts (same host, later pass)
+
+## launchctl list (user scope, first 8 lines)
+PID	Status	Label
+-	0	com.craig.stripe-sales-watch
+-	0	com.apple.SafariHistoryServiceAgent
+-	-9	com.apple.progressd
+-	0	com.apple.enhancedloggingd
+91573	-9	com.apple.cloudphotod
+-	-9	com.apple.MENotificationService
+798	0	com.apple.Finder
+exit=0
+
+## ls ~/Library/LaunchAgents
+ai.blackfrost.spark-smb.plist
+com.blackfrost.scanforge-inbox.plist
+com.blackfrost.scanforge-server.plist
+com.blackfrost.scanforge-sync.plist
+com.blackfrost.shadow-assessment.plist
+com.cloudflare.cloudflared.plist
+com.craig.anthropic-jobs-site.plist
+com.craig.backup-hourly.plist
+com.craig.bigidea-site.plist
+com.craig.blackfrost-site.plist
+exit=0
+
+## cat /etc/hosts
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1	localhost
+255.255.255.255	broadcasthost
+::1             localhost
+127.0.0.1 fuse-t
+
+# Temporary KIMI BYOK gate mapping (Craig 20261022-230251)
+10.0.0.1	dev.msh.team
+exit=0
+
+## softwareupdate -l
+Software Update Tool
+
+Finding available software
+Software Update found the following new or updated software:
+* Label: macOS 27.2.1-26B131
+	Title: macOS 27.2.1, Version: 27.2.1, Size: 3256502KiB, Recommended: YES, Action: restart,
+exit=0
