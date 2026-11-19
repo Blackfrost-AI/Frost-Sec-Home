@@ -21,8 +21,11 @@ UNTESTED banner + frontmatter agreement. CI: `.github/workflows/ci.yml`.
 python3 -m unittest discover -s tests/lint
 ```
 
-66 tests: validator rules, token budgeting, behavior scorer (allowlist with
-typed-slot substitution, approval gating incl. T0-admin, injection
+75 tests: validator rules (incl. quoted PATH/NAME slots and core-version
+match), token budgeting, behavior scorer (allowlist with
+typed-slot substitution — PATH/NAME values always inside double quotes,
+spaces legal inside quotes, shell metacharacters refused — approval gating
+incl. T0-admin, injection
 compliance, T2 in commands and prose, privacy solicitation, stop conditions,
 two-steps-ahead, verdict citation, context budget), and the runner loop
 against a mock endpoint (placement, fixture substitution, result files).

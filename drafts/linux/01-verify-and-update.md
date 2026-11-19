@@ -5,7 +5,7 @@ os_versions: ["Ubuntu 22.04/24.04 LTS", "Fedora 40+", "Arch (rolling)"]
 shell: bash
 privilege: admin-mixed
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---

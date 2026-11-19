@@ -5,7 +5,7 @@ os_versions: ["Ubuntu 22.04/24.04 LTS", "Fedora 40+", "Arch (rolling)"]
 shell: bash
 privilege: user
 pack_type: incident
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---
@@ -23,7 +23,8 @@ does not guarantee your files back.
 ## Step 0 — confirm this is the right pack
 
 Ask: "Are you on Linux, and do you see a ransom message plus many renamed
-files?" Wrong OS → name the right pack. Signs unconfirmed → Step 1 first.
+files?" Wrong OS → name the right pack. Ask the user to paste the exact
+folder path where the renamed files are. Signs unconfirmed → Step 1 first.
 
 ```command
 cat /etc/os-release
@@ -49,16 +50,17 @@ NEVER CONCLUDE: anything from identity alone.
 
 ## Step 1 — verify the pattern (look-only, only if unconfirmed)
 
-The PATH slot byte-matches the folder path the user pasted; reject symbols
-like ; | & $ ` or quotes.
+The PATH slot keeps its quotes and byte-matches the folder path the user
+pasted in step 0 (spaces fine); reject values containing ; | & $ ` " ' or
+newlines.
 
 ```command
-ls -la <PATH: folder path pasted by the user, from step 0> | head -20
+ls -la "<PATH: folder path pasted by the user, from step 0>" | head -20
 ```
 
 ```card
 CARD L-INC-01
-COMMAND: ls -la <PATH: folder path pasted by the user, from step 0> | head -20
+COMMAND: ls -la "<PATH: folder path pasted by the user, from step 0>" | head -20
 TIER: T0
 NORMAL LOOKS LIKE: ordinary names; a lone .part/.crdownload = unfinished download, NOT ransomware — say so plainly, stop the incident path.
 SUSPICIOUS LOOKS LIKE: many files sharing a new ending PLUS a note like READ_ME/RECOVER/DECRYPT (confirmed) — Step 2.

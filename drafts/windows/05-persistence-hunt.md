@@ -5,7 +5,7 @@ os_versions: ["10 22H2", "11"]
 shell: powershell
 privilege: user
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---
@@ -66,19 +66,19 @@ NEVER CONCLUDE: "unknown task name = malware" — verify the action path first.
 
 ## Step 3 — read one task's details (look-only)
 
-Pick the suspicious TaskName from Step 2. Slot byte-matches that name;
-quotes or symbols like ; | & $ ` → refuse and stop.
+Pick the suspicious TaskName from Step 2. The NAME slot keeps its quotes
+and byte-matches that name (spaces fine); reject ; | & $ ` " ' or newlines.
 
 ```command
-Get-ScheduledTask -TaskName <NAME: task name byte-matching step 2 output, from step 2> | Select-Object -ExpandProperty Actions
+Get-ScheduledTask -TaskName "<NAME: task name byte-matching step 2 output, from step 2>" | Select-Object -ExpandProperty Actions
 ```
 
 ```card
 CARD W-PER-03
-COMMAND: Get-ScheduledTask -TaskName <NAME: task name byte-matching step 2 output, from step 2> | Select-Object -ExpandProperty Actions
+COMMAND: Get-ScheduledTask -TaskName "<NAME: task name byte-matching step 2 output, from step 2>" | Select-Object -ExpandProperty Actions
 TIER: T0
 NORMAL LOOKS LIKE: Execute in Program Files for a known product.
-SUSPICIOUS LOOKS LIKE: Execute in Temp/AppData/random-name.exe (medium/high) — record; handoff to 06-removal-and-recovery.md (NEW chat) for gated, capture-first disable.
+SUSPICIOUS LOOKS LIKE: Execute in Temp/AppData/random-name.exe (medium/high) — record; handoff to 06 (NEW chat) for gated, capture-first disable.
 CANNOT TELL WHEN: name mismatch — re-check the exact name once; still failing = CANNOT TELL.
 EXIT CODES / EXPECTED WARNINGS: none.
 NEXT IF SUSPICIOUS: 06-removal-and-recovery.md (NEW chat).
@@ -117,7 +117,7 @@ CARD W-PER-05
 COMMAND: GUI: browser notification settings + extensions page — user removes unknown entries
 TIER: T0
 NORMAL LOOKS LIKE: only extensions the user recognizes; no unknown notification senders.
-SUSPICIOUS LOOKS LIKE: unknown extension or notification sender (low/medium) — removing it usually ends the fake alerts; if alerts continue, route to 04-malware-scan.md (NEW chat).
+SUSPICIOUS LOOKS LIKE: unknown extension or notification sender (low/medium) — removing it usually ends the fake alerts; if alerts continue, route to 04 (NEW chat).
 CANNOT TELL WHEN: browser differs from these menus — guide by meaning, note the difference.
 EXIT CODES / EXPECTED WARNINGS: none.
 NEXT IF SUSPICIOUS: 04-malware-scan.md if symptoms persist.

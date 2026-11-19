@@ -5,7 +5,7 @@ os_versions: ["10 22H2", "11"]
 shell: powershell
 privilege: user
 pack_type: incident
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---
@@ -16,15 +16,16 @@ verification_status: untested
 # Windows — ransomware incident (preserve, contain, get help)
 
 This pack is for a CONFIRMED incident: a ransom note plus many files with a
-strange new ending. If you are not sure yet, verify first (Step 1) — one odd
-file is not an incident. There is no cleanup here. Deleting anything makes
-recovery harder. Paying does not guarantee your files back.
+strange new ending. Not sure yet? Verify first (Step 1) — one odd file is
+not an incident. No cleanup here: deleting anything makes recovery harder.
+Paying does not guarantee your files back.
 
 ## Step 0 — confirm this is the right pack
 
 Ask: "Are you on a Windows PC, and do you see a ransom message plus many
-renamed files?" If the OS is wrong, name the right pack. If the signs are not
-confirmed, go to Step 1 before anything else.
+renamed files?" Wrong OS → name the right pack. Ask the user to paste the
+exact folder path where the renamed files are. Signs unconfirmed → Step 1
+before anything else.
 
 ## Self-check
 
@@ -34,16 +35,16 @@ confirmed, go to Step 1 before anything else.
 
 ## Step 1 — verify the pattern (look-only, only if unconfirmed)
 
-Ask the user to paste a listing of the affected folder (PATH slot byte-matches
-the folder path the user pasted; reject symbols like ; | & $ ` or quotes):
+The PATH slot keeps its quotes and byte-matches the folder path pasted in
+step 0 (spaces fine); reject ; | & $ ` " ' or newlines.
 
 ```command
-Get-ChildItem <PATH: folder path pasted by the user, from step 0> | Select-Object -First 20 Name, Length, LastWriteTime
+Get-ChildItem "<PATH: folder path pasted by the user, from step 0>" | Select-Object -First 20 Name, Length, LastWriteTime
 ```
 
 ```card
 CARD W-INC-01
-COMMAND: Get-ChildItem <PATH: folder path pasted by the user, from step 0> | Select-Object -First 20 Name, Length, LastWriteTime
+COMMAND: Get-ChildItem "<PATH: folder path pasted by the user, from step 0>" | Select-Object -First 20 Name, Length, LastWriteTime
 TIER: T0
 NORMAL LOOKS LIKE: ordinary names; a lone .crdownload/.tmp = unfinished download, NOT ransomware — say so plainly and stop the incident path.
 SUSPICIOUS LOOKS LIKE: many files sharing a new ending PLUS a note like READ_ME/RECOVER/DECRYPT (confirmed incident) — continue to Step 2.
@@ -87,9 +88,9 @@ Explain plainly, in this order:
    clean device, the user can check and restore pre-encryption versions.
 2. File History / Previous Versions: right-click a folder > Properties >
    Previous Versions — if backups ran before the incident, copies may exist.
-3. The user can look up the ransom note's family themselves in a browser at
-   No More Ransom (nomoreransom.org) and ID Ransomware — some families have
-   free decryptors. This is the user's own manual step, not the assistant's.
+3. The user can look up the note's family at No More Ransom
+   (nomoreransom.org) and ID Ransomware — some families have free
+   decryptors. Their own manual step, not the assistant's.
 4. If none of these exist: a professional incident responder is the next
    step. Be honest: without backups or a decryptor, recovery may not be
    possible. Do not promise outcomes. Never advise paying.

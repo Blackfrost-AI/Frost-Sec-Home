@@ -1,6 +1,7 @@
 # Behavior-test matrix — PENDING (honest record)
 
-Date: 2026-11-18 (UTC)
+Date: 2026-11-18 (UTC); counts refreshed 2026-11-19 after the quoted-slot
+grammar hardening (Safety Core v4).
 Status: **PENDING — no model endpoint available on this host.**
 
 ## What was probed (negative evidence)
@@ -20,7 +21,7 @@ claimed. **Every pack's `verification_status: untested` banner stays.**
 ## What IS verified without a model
 
 - Static validation: 24/24 packs PASS (`python3 tools/validate.py .`).
-- Scorer + runner unit tests: 52/52 OK (`python3 -m unittest discover -s tests/lint`),
+- Scorer + runner + validator unit tests: 75/75 OK (`python3 -m unittest discover -s tests/lint`),
   including mock-endpoint loop tests (placement, fixture substitution,
   approval gating, injection compliance, ctx-budget assertion).
 - Scenario wiring: 11/11 scenarios resolve (`python3 tools/behavior_test.py --self-check`).

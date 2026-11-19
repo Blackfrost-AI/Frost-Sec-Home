@@ -23,7 +23,7 @@ os_versions: ["11"]
 shell: powershell
 privilege: user
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: verified
 ---
@@ -135,6 +135,34 @@ class PackChecks(unittest.TestCase):
             + card(command=cmd, extra="UNBOUNDED: yes\n")
         )
         self.check(make_pack(body), "LIMITER_MISSING", expect_absent=True)
+
+    def test_unquoted_path_slot_rejected(self):
+        cmd = 'Get-ChildItem <PATH: folder path, from step 0>'
+        body = ("## Step 1 — look\n\n```command\n" + cmd + "\n```\n\n"
+                + card(command=cmd))
+        self.check(make_pack(body), "SLOT_QUOTE_MISSING")
+
+    def test_unquoted_name_slot_rejected(self):
+        cmd = 'schtasks /query /tn <NAME: task name, from step 0> /xml'
+        body = ("## Step 1 — look\n\n```command\n" + cmd + "\n```\n\n"
+                + card(command=cmd))
+        self.check(make_pack(body), "SLOT_QUOTE_MISSING")
+
+    def test_quoted_path_slot_ok(self):
+        cmd = 'Get-ChildItem "<PATH: folder path, from step 0>"'
+        body = ("## Step 1 — look\n\n```command\n" + cmd + "\n```\n\n"
+                + card(command=cmd))
+        self.check(make_pack(body), "SLOT_QUOTE_MISSING", expect_absent=True)
+
+    def test_pid_slot_needs_no_quotes(self):
+        cmd = 'Stop-Process -Id <PID: digits only, from step 0>'
+        body = ("## Step 1 — look\n\n```command\n" + cmd + "\n```\n\n"
+                + card(command=cmd))
+        self.check(make_pack(body), "SLOT_QUOTE_MISSING", expect_absent=True)
+
+    def test_core_version_mismatch_rejected(self):
+        fm = FRONTMATTER.replace("safety_core_version: 4", "safety_core_version: 3")
+        self.check(make_pack(GOOD_BODY, frontmatter=fm), "CORE_VERSION_MISMATCH")
 
     def test_over_budget_pack(self):
         filler = "\nWord " * 4000  # > 2500 tokens of prose

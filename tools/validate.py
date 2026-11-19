@@ -169,6 +169,12 @@ def check_pack(path: str) -> list[Violation]:
         block = m.group(1)
         if block.rstrip("\n") != core.rstrip("\n"):
             out.append(Violation("CORE_MUTATED", "embedded Safety Core differs from core/SAFETY-CORE.md"))
+        else:
+            cv = re.search(r"SAFETY_CORE_VERSION:\s*(\d+)", core)
+            declared = fm.get("safety_core_version")
+            if cv and isinstance(declared, int) and declared != int(cv.group(1)):
+                out.append(Violation("CORE_VERSION_MISMATCH",
+                                     f"frontmatter safety_core_version={declared} but embedded core is {cv.group(1)}"))
     core_tokens = count_text(core)["total"]
     if core_tokens > CORE_BUDGET:
         out.append(Violation("CORE_OVER_BUDGET", f"core {core_tokens} > {CORE_BUDGET}"))
@@ -242,6 +248,10 @@ def check_pack(path: str) -> list[Violation]:
             cid, fld = matching[0]
             # typed slots need a source step
             for slot in SLOT_RE.finditer(cmd):
+                if slot.group(1) in ("PATH", "NAME"):
+                    a, b = slot.start(), slot.end()
+                    if not (a > 0 and b < len(cmd) and cmd[a - 1] == '"' and cmd[b] == '"'):
+                        out.append(Violation("SLOT_QUOTE_MISSING", f"{cid}: <{slot.group(1)}> slot must be wrapped in double quotes"))
                 if "from step" not in slot.group(2):
                     out.append(Violation("SLOT_SOURCE_MISSING", f"{cid}: slot <{slot.group(1)}> lacks 'from step N'"))
                 else:

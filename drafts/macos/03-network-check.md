@@ -5,7 +5,7 @@ os_versions: ["13 Ventura", "14 Sonoma", "15 Sequoia"]
 shell: zsh
 privilege: admin-mixed
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---

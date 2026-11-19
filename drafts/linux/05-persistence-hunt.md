@@ -5,7 +5,7 @@ os_versions: ["Ubuntu 22.04/24.04 LTS", "Fedora 40+", "Arch (rolling)"]
 shell: bash
 privilege: user
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---
@@ -83,39 +83,40 @@ NEVER CONCLUDE: "unknown service = malware" — many legit helpers exist.
 
 ## Step 3 — read ONE suspicious item (look-only)
 
-Autostart .desktop from Step 1:
+Autostart .desktop from Step 1. PATH keeps its quotes and byte-matches that
+path (spaces fine); reject ; | & $ ` " ' or newlines.
 
 ```command
-cat <PATH: .desktop path from step 1>
+cat "<PATH: .desktop path from step 1>"
 ```
 
 ```card
 CARD L-PER-03
-COMMAND: cat <PATH: .desktop path from step 1>
+COMMAND: cat "<PATH: .desktop path from step 1>"
 TIER: T0
 NORMAL LOOKS LIKE: Exec= points to a known program (/usr/bin, /opt, snap).
-SUSPICIOUS LOOKS LIKE: Exec= from /tmp, /var/tmp, /dev/shm, or curl-pipe-sh (medium/high) — record; 06 (NEW chat).
+SUSPICIOUS LOOKS LIKE: Exec= from /tmp, /var/tmp, /dev/shm, or curl-pipe-sh (medium/high) — record.
 CANNOT TELL WHEN: unreadable — do not guess contents.
 EXIT CODES / EXPECTED WARNINGS: none.
-NEXT IF SUSPICIOUS: 06-removal-and-recovery.md (NEW chat).
+NEXT IF SUSPICIOUS: 06 (NEW chat).
 NEVER CONCLUDE: "autostart = malicious" — just start at login.
 ```
 
-Service unit from Step 2 instead (name byte-matches, letters/digits/.- only):
+Service unit from Step 2 instead:
 
 ```command
-systemctl cat <NAME: unit name from step 2>
+systemctl cat "<NAME: unit name from step 2>"
 ```
 
 ```card
 CARD L-PER-04
-COMMAND: systemctl cat <NAME: unit name from step 2>
+COMMAND: systemctl cat "<NAME: unit name from step 2>"
 TIER: T0
 NORMAL LOOKS LIKE: ExecStart= in /usr/bin or /usr/lib for a known product.
-SUSPICIOUS LOOKS LIKE: ExecStart= in /tmp or random-name binary (medium/high) — record; 06 (NEW chat).
+SUSPICIOUS LOOKS LIKE: ExecStart= in /tmp or random-name binary (medium/high) — record.
 CANNOT TELL WHEN: unit not found — re-check the name once, then CANNOT TELL.
 EXIT CODES / EXPECTED WARNINGS: none.
-NEXT IF SUSPICIOUS: 06-removal-and-recovery.md (NEW chat).
+NEXT IF SUSPICIOUS: 06 (NEW chat).
 NEVER CONCLUDE: "enabled = malicious".
 ```
 
@@ -130,7 +131,7 @@ CARD L-PER-05
 COMMAND: crontab -l
 TIER: T0
 NORMAL LOOKS LIKE: "no crontab for <user>" — most desktop users have none.
-SUSPICIOUS LOOKS LIKE: entries the user never created, especially curl-pipe-sh (high) — NEEDS A HUMAN.
+SUSPICIOUS LOOKS LIKE: entries the user never created, esp. curl-pipe-sh (high) — NEEDS A HUMAN.
 CANNOT TELL WHEN: command not found — cron not installed; note it.
 EXIT CODES / EXPECTED WARNINGS: "no crontab for" exits 1 — EXPECTED.
 NEXT IF SUSPICIOUS: NEEDS A HUMAN.
@@ -174,5 +175,5 @@ NEVER CONCLUDE: "custom hosts = malware" — ad-blocking uses it too.
 ## Report
 
 Fill the REPORT SKELETON. HANDOFF: confirmed-suspicious item →
-`packs/linux/06-removal-and-recovery.md`; else `packs/linux/04-malware-scan.md`
-if not yet run. NEW chat, HANDOFF first.
+`packs/linux/06-removal-and-recovery.md`; else `packs/linux/04-malware-scan.md`.
+NEW chat, HANDOFF first.

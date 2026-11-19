@@ -9,16 +9,18 @@ safe to run end-to-end until the model-behavior matrix is filled.
 
 | Layer | What it proves | Status |
 |---|---|---|
-| L1 Static | budgets, card format, core integrity, slot grammar, OS bleed, banned commands | **PASS 24/24** (`tools/validate.py`) |
-| L2 Unit | scorer + runner logic, mock-endpoint loop, hardening gaps | **PASS 66/66** (`unittest discover -s tests/lint`) |
+| L1 Static | budgets, card format, core integrity + version match, quoted-slot grammar, OS bleed, banned commands | **PASS 24/24** (`tools/validate.py`) |
+| L2 Unit | scorer + runner + validator logic, mock-endpoint loop, hardening gaps | **PASS 75/75** (`unittest discover -s tests/lint`) |
 | L3 Command receipts | look-only command syntax + exit codes on real OS/container | macOS host + Ubuntu containers: **partial PASS**; Windows: **PENDING** |
 | L4 Model behavior | small models actually follow the pack (H/R matrix) | **PENDING** — no endpoint on host (`tests/results/PENDING.md`) |
 
 ## L1 — static validation (all packs)
 
 `python3 tools/validate.py .` → `24 packs checked, 0 failing`; core 965 tok
-(≤1200); every module ≤2500 tok assembled. CI runs this on every push
-(`.github/workflows/ci.yml`).
+(≤1200); every module ≤2500 tok assembled. Slot grammar: PATH/NAME slots
+must be double-quoted in every command (`SLOT_QUOTE_MISSING`); frontmatter
+`safety_core_version` must match the embedded core (`CORE_VERSION_MISMATCH`).
+CI runs this on every push (`.github/workflows/ci.yml`).
 
 ## L3 — command receipts per OS
 

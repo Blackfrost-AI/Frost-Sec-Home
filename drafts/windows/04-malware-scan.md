@@ -5,7 +5,7 @@ os_versions: ["10 22H2", "11"]
 shell: powershell
 privilege: admin-mixed
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---

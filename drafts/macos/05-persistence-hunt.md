@@ -5,7 +5,7 @@ os_versions: ["13 Ventura", "14 Sonoma", "15 Sequoia"]
 shell: zsh
 privilege: user
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---
@@ -16,7 +16,7 @@ verification_status: untested
 # macOS — persistence hunt (what starts itself)
 
 Launch agents/daemons, login items, cron, hosts file. Look-only; suspicious
-items get verified, never deleted on a hunch. Many legit programs live here.
+items get verified, never deleted on a hunch.
 
 ## Step 0 — confirm this is the right pack
 
@@ -55,7 +55,7 @@ ls -la ~/Library/LaunchAgents
 CARD M-PER-01
 COMMAND: ls -la ~/Library/LaunchAgents
 TIER: T0
-NORMAL LOOKS LIKE: plist files named like com.vendor.product — updaters, sync tools. Dozens is normal.
+NORMAL LOOKS LIKE: plist files named like com.vendor.product — updaters, sync tools.
 SUSPICIOUS LOOKS LIKE: random-string names, or plists pointing into /tmp, /Users/Shared, hidden folders (medium) — Step 3 reads one.
 CANNOT TELL WHEN: "No such file or directory" — NORMAL, folder may not exist.
 EXIT CODES / EXPECTED WARNINGS: paste only the first 30 lines.
@@ -83,19 +83,20 @@ NEVER CONCLUDE: "unknown vendor = malware" — small legit vendors exist.
 
 ## Step 3 — read ONE item's definition (look-only)
 
-The PATH slot byte-matches the plist path from Step 1 or 2.
+The PATH slot keeps its quotes and byte-matches the plist path from Step 1
+or 2 (spaces fine); reject ; | & $ ` " ' or newlines.
 
 ```command
-plutil -p <PATH: plist path from step 1 or 2, from step 1>
+plutil -p "<PATH: plist path from step 1 or 2, from step 1>"
 ```
 
 ```card
 CARD M-PER-03
-COMMAND: plutil -p <PATH: plist path from step 1 or 2, from step 1>
+COMMAND: plutil -p "<PATH: plist path from step 1 or 2, from step 1>"
 TIER: T0
 NORMAL LOOKS LIKE: ProgramArguments points into /Applications or /Library for a known product; RunAtLoad true is normal.
-SUSPICIOUS LOOKS LIKE: program in /tmp, /Users/Shared, or a random-name binary (medium/high) — record; gated disable in 06-removal-and-recovery.md (NEW chat).
-CANNOT TELL WHEN: unreadable plist — CANNOT TELL; do not guess contents.
+SUSPICIOUS LOOKS LIKE: program in /tmp, /Users/Shared, or a random-name binary (medium/high) — record; gated disable in 06 (NEW chat).
+CANNOT TELL WHEN: unreadable plist — CANNOT TELL; do not guess.
 EXIT CODES / EXPECTED WARNINGS: none.
 NEXT IF SUSPICIOUS: 06-removal-and-recovery.md (NEW chat).
 NEVER CONCLUDE: "RunAtLoad = malicious" — it just means start at login.
@@ -108,7 +109,7 @@ CARD M-PER-04
 COMMAND: GUI: System Settings > General > Login Items & Extensions — read-only
 TIER: T0
 NORMAL LOOKS LIKE: apps the user recognizes; "Allow in the Background" helpers from known vendors.
-SUSPICIOUS LOOKS LIKE: unknown item, especially "item from unidentified developer" (medium) — record; user may toggle it Off themselves (their click, reversible).
+SUSPICIOUS LOOKS LIKE: unknown item, especially "item from unidentified developer" (medium) — record; user may toggle Off themselves (reversible).
 CANNOT TELL WHEN: pane differs by version — note it, move on.
 EXIT CODES / EXPECTED WARNINGS: macOS 13 names it "Login Items".
 NEXT IF SUSPICIOUS: record; 06 if confirmed.
@@ -145,7 +146,7 @@ COMMAND: cat /etc/hosts
 TIER: T0
 NORMAL LOOKS LIKE: localhost lines (127.0.0.1, ::1) and maybe a few user-added blocks.
 SUSPICIOUS LOOKS LIKE: entries redirecting apple.com, icloud.com, or update domains elsewhere (high) — possible tampering; NEEDS A HUMAN.
-CANNOT TELL WHEN: unfamiliar entries the user may have added — ask before judging.
+CANNOT TELL WHEN: unfamiliar entries the user may have added — ask first.
 EXIT CODES / EXPECTED WARNINGS: none.
 NEXT IF SUSPICIOUS: NEEDS A HUMAN.
 NEVER CONCLUDE: "custom hosts = malware" — ad-blocking uses it too.

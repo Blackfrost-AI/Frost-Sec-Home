@@ -5,7 +5,7 @@ os_versions: ["10 22H2", "11"]
 shell: powershell
 privilege: admin-mixed
 pack_type: module
-safety_core_version: 3
+safety_core_version: 4
 min_context_tokens: 16000
 verification_status: untested
 ---
@@ -42,8 +42,8 @@ COMMAND: Checkpoint-Computer -Description "Frost-Sec-Home before hardening"
 TIER: T1
 NORMAL LOOKS LIKE: no output after ~a minute = created.
 SUSPICIOUS LOOKS LIKE: none; see expected refusals below.
-CANNOT TELL WHEN: other errors — continue only with explicit informed YES that there is no rollback net.
-EXIT CODES / EXPECTED WARNINGS: (1) "System protection is disabled" / "restore point creation is disabled" = protection OFF (common default) — Step 1b. (2) A point already created in the last 24h = NORMAL; it is your net, continue. Neither counts toward the two-errors stop rule.
+CANNOT TELL WHEN: other errors — continue only with informed YES — no rollback net.
+EXIT CODES / EXPECTED WARNINGS: (1) "System protection is disabled" / "restore point creation is disabled" = OFF — Step 1b. (2) A point from the last 24h = NORMAL; it is your net, continue. Neither counts toward the two-errors stop.
 NEXT IF SUSPICIOUS: Step 1b if protection is off.
 NEVER CONCLUDE: "refusal means hardening is impossible" — both refusals have normal paths.
 ```
@@ -52,7 +52,7 @@ NEVER CONCLUDE: "refusal means hardening is impossible" — both refusals have n
 
 FULL APPROVAL. WHAT: enable System Protection on C:. WHY: restore points
 need it. RISK: a few GB disk. UNDO: same screen, Disable. Wait for YES;
-guide the card's clicks; then repeat Step 1 with a fresh YES.
+guide the clicks; then repeat Step 1 with a fresh YES.
 
 ```card
 CARD W-HAR-02
@@ -63,7 +63,7 @@ SUSPICIOUS LOOKS LIKE: option greyed out (policy) — stop, NEEDS A HUMAN.
 CANNOT TELL WHEN: window differs — stop, never improvise.
 EXIT CODES / EXPECTED WARNINGS: none.
 NEXT IF SUSPICIOUS: NEEDS A HUMAN.
-NEVER CONCLUDE: "no restore point means skip safety" — offer proceed-with-explicit-warning instead.
+NEVER CONCLUDE: "no restore point means skip safety" — proceed-with-warning only.
 ```
 
 ## Step 2 — firewall check (look-only)
@@ -84,11 +84,13 @@ NEXT IF SUSPICIOUS: Step 3.
 NEVER CONCLUDE: "firewall off means hacked" — it means exposed.
 ```
 
-## Step 3 — turn the firewall on (T1, only for profiles that are off)
+## Step 3 — turn the firewall on (T1, only if a profile is off)
 
-FULL APPROVAL. WHAT: enable the firewall on every profile. WHY: block
-unwanted incoming connections. RISK: an app needing an open port may re-ask
-permission. UNDO: same command with `-Enabled False`. Wait for YES.
+FIRST save Step 2's list — it is the undo. FULL APPROVAL. WHAT: enable all
+profiles (`-All`; True stays True). WHY: block unwanted connections. RISK:
+an app may re-ask port permission. UNDO: only profiles that were False,
+one per YES: `Set-NetFirewallProfile -Name <profile> -Enabled False`.
+NEVER `-All -Enabled False`. Wait for YES.
 
 ```command
 Set-NetFirewallProfile -All -Enabled True
@@ -110,8 +112,7 @@ NEVER CONCLUDE: "firewall on means nothing gets in" — reduced exposure, not a 
 
 Tamper Protection blocks PowerShell here — do it by hand. FULL APPROVAL.
 WHAT: real-time protection On. WHY: catch malware as it runs. RISK: Defender
-may quarantine a flagged file. UNDO: same screen, toggle off. Wait for YES;
-guide the card's clicks.
+may quarantine a flagged file. UNDO: same screen, toggle off. Wait for YES.
 
 ```card
 CARD W-HAR-05
@@ -120,16 +121,15 @@ TIER: T1
 NORMAL LOOKS LIKE: shows On. ALSO NORMAL: another antivirus registered, Defender passive — leave it.
 SUSPICIOUS LOOKS LIKE: switches refuse to move, no other antivirus (medium) — policy or tampering; NEEDS A HUMAN.
 CANNOT TELL WHEN: layout differs — stop, never improvise.
-EXIT CODES / EXPECTED WARNINGS: "managed by your organization" on a home PC = CANNOT TELL. A refused switch while Tamper Protection is On = Windows protecting itself, not failure.
+EXIT CODES / EXPECTED WARNINGS: "managed by your organization" on a home PC = CANNOT TELL. Refused switch with Tamper Protection On = self-protection.
 NEXT IF SUSPICIOUS: NEEDS A HUMAN.
-NEVER CONCLUDE: "greyed switch means infection" — usually policy or Tamper Protection.
+NEVER CONCLUDE: "greyed switch means infection" — usually policy.
 ```
 
 ## Step 5 — account and lock check (guided look-only)
 
-Guide the card's three panes, read-only. Daily account Administrator? A
-standard account is safer — recommendation only, their decision; never
-change accounts here.
+Guide the card's three panes, read-only. Admin daily account? Standard is
+safer — recommendation only; never change accounts here.
 
 ```card
 CARD W-HAR-06
@@ -137,10 +137,10 @@ COMMAND: GUI: Settings > Accounts / Sign-in options / Lock screen — read-only
 TIER: T0
 NORMAL LOOKS LIKE: standard daily account; sign-in on wake; lock within 10 min.
 SUSPICIOUS LOOKS LIKE: admin daily account + no lock (low) — recommendations only.
-CANNOT TELL WHEN: pane not found — note it, move on.
+CANNOT TELL WHEN: pane not found — note it.
 EXIT CODES / EXPECTED WARNINGS: pane names vary by version.
 NEXT IF SUSPICIOUS: recommendations in the report.
-NEVER CONCLUDE: "admin account means compromised" — hygiene risk, not evidence.
+NEVER CONCLUDE: "admin account means compromised" — hygiene risk.
 ```
 
 ## Report

@@ -22,8 +22,9 @@ Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 License summary: https://creativecommons.org/licenses/by/4.0/
 
 Attribution notice for redistributions:
-  "Frost-Sec-Home" (https://github.com/ — repository URL to be added at
-  publication), licensed under CC BY 4.0. Changes were made: [describe].
+  "Frost-Sec-Home", licensed under CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Changes were made: [describe].
+  If you received this from a published repository, include its URL here.
 
 THE CONTENT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Security
 guidance is not a guarantee of safety; see docs/THREAT-MODEL.md.

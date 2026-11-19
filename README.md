@@ -82,7 +82,7 @@ carries a visible UNTESTED banner. Treat these as careful drafts, and prefer
 the look-only steps until testing lands.
 
 What IS fully verified at v0.1.0: the safety tooling — 24/24 packs pass
-static validation, 66/66 unit tests pass, and the behavior-test harness is
+static validation, 75/75 unit tests pass, and the behavior-test harness is
 ready to run the moment a model endpoint exists (see
 [docs/TESTING.md](docs/TESTING.md)).
 
