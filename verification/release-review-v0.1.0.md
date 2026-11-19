@@ -68,6 +68,29 @@ dispositions. "Fixed in v0.1.0" means the fix landed before the tag;
 - N5 `launchctl unload && mv` partial-state on unload error (deprecated
   command acknowledged in MAINTENANCE.md).
 
+## Final pre-tag review (second reviewer pass, post-fix commit `ecf3d74`)
+
+Verdict: **TAG v0.1.0** — every claimed fix verified against file content
+(B1, S1–S5, S9, S10 all confirmed with file:line evidence; deferrals honest;
+24/24 UNTESTED banners intact). Reviewer had read-only tools; the three
+executable checks were re-run by the operator immediately before tagging
+(24/24 PASS, 75/75 OK, 0 wiring failures, clean tree). New non-blocking
+findings, all → v0.1.1:
+
+- F1 (SHOULD-FIX, low): windows/02 firewall UNDO is a prose-only command with
+  untyped `<profile>` slot — direction is safe post-S3, but fold into the S8
+  fence-policy decision (fence+card it, or make it a guided GUI undo).
+- F2 (NIT): linux/05 L-PER-04 routes suspicious systemd services to 06, which
+  now refuses them — fail-closed but a wasted hop; route straight to NEEDS A
+  HUMAN.
+- F3 (NIT): macos/05 `"<PATH: plist path from step 1 or 2, from step 1>"` —
+  provenance tag names only step 1; clarify wording (related to deferred S6).
+- F4 (NIT): S5 collision branch "rename with today's date" doesn't say which
+  side to rename; `mv -n` exits 0 silently on collision — add a clarifying
+  clause + fenced verify step.
+- F5 (NIT): linux/02 Step 2 heading says "(T1-admin)" — nonexistent tier
+  label; cards are correct (T0-admin/T1). Cosmetic vocabulary fix.
+
 ## Verified clean by the reviewer (evidence-based)
 
 UNTESTED consistency 24/24; cross-pack handoffs resolve; ransomware
